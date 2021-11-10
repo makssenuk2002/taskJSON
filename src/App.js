@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import './style.css'
+import Content from "./Content";
+import obj from "./data";
+import {useState} from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+
+const App = () => {
+    const [object, setObject] = useState(obj)
+    const sortByProp = (property) => {
+        let sortOrder = 1;
+        if(property[0] === "-") {
+            sortOrder = -1;
+            property = property.substr(1);
+        }
+        return function (a,b) {
+
+            let result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+            return result * sortOrder;
+        }
+    }
+    const sortObj = JSON.parse(JSON.stringify(obj))
+    sortObj.products.sort(sortByProp('name'))
+
+
+    return(
+        <div>
+            <button
+                onClick={()=> object === obj ? setObject(sortObj) :setObject(obj) }
+            >
+                Filter by name
+            </button>
+            <Content
+                obj={object}
+            />
+        </div>
+    )
 }
-
-export default App;
+export default App
